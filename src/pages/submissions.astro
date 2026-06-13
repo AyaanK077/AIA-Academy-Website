@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<BaseLayout
+  title="Submissions"
+  description="Editor-only view of form submissions."
+>
+  <PageHero
+    eyebrow="Editors only"
+    title="Form submissions"
+    subtitle="A read-only view of everything submitted through the site's forms. Log in with your editor account to view."
+  />
+
+  <section class="container-page py-12">
+    <!-- Logged-out state -->
+    <div id="sub-login" class="mx-auto max-w-md card text-center" hidden>
+      <p class="text-5xl">🔒</p>
+      <h2 class="mt-4 text-2xl text-emerald-800">Please log in</h2>
+      <p class="mt-2 text-ink/70">Use the same email & password you use for the admin panel.</p>
+      <button id="sub-login-btn" class="btn-primary mt-6">Log in</button>
+    </div>
+
+    <!-- Loading / error / content -->
+    <div id="sub-status" class="text-center text-ink/60" hidden></div>
+
+    <div id="sub-toolbar" class="mb-8 flex items-center justify-between gap-4" hidden>
+      <p class="text-sm text-ink/60">Newest submissions first. View only — to publish something, create an entry in <a href="/admin/" class="text-emerald-700 underline">the admin panel</a>.</p>
+      <div class="flex gap-2">
+        <button id="sub-refresh" class="btn-secondary !px-4 !py-2 text-sm">Refresh</button>
+        <button id="sub-logout" class="btn-secondary !px-4 !py-2 text-sm">Log out</button>
+      </div>
+    </div>
+
+    <div id="sub-content" class="space-y-12" hidden></div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      // Friendly names for the four known forms.
+      const FORM_LABELS = {
+        register: '🎓 Alumni Registration',
+        expertQa: '💬 Expert Q&A Questions',
+        questionOfMonth: '❓ Question of the Month Answers',
+        alumniUpdate: '📣 Alumni Updates / Stories',
+      };
+      // Hide internal fields from display.
+      const HIDDEN_FIELDS = new Set(['form-name', 'bot-field']);
+
+      const els = {
+        login: document.getElementById('sub-login'),
+        loginBtn: document.getElementById('sub-login-btn'),
+        status: document.getElementById('sub-status'),
+        toolbar: document.getElementById('sub-toolbar'),
+        content: document.getElementById('sub-content'),
+        refresh: document.getElementById('sub-refresh'),
+        logout: document.getElementById('sub-logout'),
+      };
+
+      function show(el, on) { el.hidden = !on; }
+      function setStatus(msg) {
+        if (msg) { els.status.textContent = msg; show(els.status, true); }
+        else { show(els.status, false); }
+      }
+
+      function esc(s) {
+        return String(s ?? '').replace(/[&<>"']/g, (c) =>
+          ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      }
+      function prettyField(key) {
+        return key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+      }
+      function fmtDate(iso) {
+        try {
+          return new Date(iso).toLocaleString(undefined, {
+            dateStyle: 'medium', timeStyle: 'short',
+          });
+        } catch { return iso; }
+      }
+
+      function renderForms(forms) {
+        if (!forms || forms.length === 0) {
+          els.content.innerHTML = '<p class="text-center text-ink/60">No submissions yet.</p>';
+          return;
+        }
+        els.content.innerHTML = forms.map((form) => {
+          const label = FORM_LABELS[form.name] || form.name;
+          const subs = form.submissions || [];
+          const cards = subs.length === 0
+            ? '<p class="text-sm text-ink/50">No submissions for this form yet.</p>'
+            : subs.map((s) => {
+                const rows = Object.entries(s.data)
+                  .filter(([k, v]) => !HIDDEN_FIELDS.has(k) && String(v).trim() !== '')
+                  .map(([k, v]) => {
+                    const val = /^https?:\/\//.test(String(v))
+                      ? '<a href="' + esc(v) + '" target="_blank" rel="noopener" class="text-emerald-700 underline break-all">' + esc(v) + '</a>'
+                      : esc(v).replace(/\n/g, '<br>');
+                    return '<div class="grid grid-cols-3 gap-3 py-1.5 border-b border-cream-200 last:border-0">'
+                      + '<dt class="text-xs font-semibold uppercase tracking-wide text-gold-600 col-span-1">' + esc(prettyField(k)) + '</dt>'
+                      + '<dd class="col-span-2 text-sm text-ink/90">' + val + '</dd>'
+                      + '</div>';
+                  }).join('');
+                return '<div class="card">'
+                  + '<p class="mb-3 text-xs text-ink/50">' + esc(fmtDate(s.created_at)) + '</p>'
+                  + '<dl>' + rows + '</dl>'
+                  + '</div>';
+              }).join('');
+          return '<div>'
+            + '<h2 class="mb-4 flex items-baseline gap-3 text-2xl text-emerald-800">'
+            + esc(label)
+            + '<span class="rounded-full bg-emerald-700 px-2.5 py-0.5 text-sm font-medium text-white">' + subs.length + '</span>'
+            + '</h2>'
+            + '<div class="space-y-4">' + cards + '</div>'
+            + '</div>';
+        }).join('');
+      }
+
+      async function load(user) {
+        setStatus('Loading submissions…');
+        show(els.toolbar, false);
+        show(els.content, false);
+        try {
+          const token = await user.jwt();
+          const res = await fetch('/.netlify/functions/submissions', {
+            headers: { Authorization: 'Bearer ' + token },
+          });
+          const json = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            setStatus('');
+            els.content.innerHTML = '<div class="mx-auto max-w-lg card text-center"><p class="text-2xl text-emerald-800">Couldn’t load submissions</p><p class="mt-2 text-ink/70">' + esc(json.error || ('Error ' + res.status)) + '</p></div>';
+            show(els.content, true);
+            show(els.toolbar, true);
+            return;
+          }
+          setStatus('');
+          renderForms(json.forms);
+          show(els.content, true);
+          show(els.toolbar, true);
+        } catch (err) {
+          setStatus('Something went wrong: ' + err);
+        }
+      }
+
+      function updateUI(user) {
+        if (user) {
+          show(els.login, false);
+          load(user);
+        } else {
+          show(els.login, true);
+          show(els.toolbar, false);
+          show(els.content, false);
+          setStatus('');
+        }
+      }
+
+      function start() {
+        const idn = window.netlifyIdentity;
+        if (!idn) { setTimeout(start, 150); return; }
+
+        idn.on('init', (user) => updateUI(user));
+        idn.on('login', (user) => { idn.close(); updateUI(user); });
+        idn.on('logout', () => updateUI(null));
+
+        // Handle the case where Identity already initialised before we attached.
+        const current = idn.currentUser();
+        if (current) updateUI(current);
+        else show(els.login, true); // default to showing login until init confirms
+
+        els.loginBtn.addEventListener('click', () => idn.open('login'));
+        els.logout.addEventListener('click', () => idn.logout());
+        els.refresh.addEventListener('click', () => {
+          const u = idn.currentUser();
+          if (u) load(u);
+        });
+      }
+
+      start();
+    })();
+  </script>
+</BaseLayout>

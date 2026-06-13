@@ -8,6 +8,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Serverless functions (e.g. the read-only submissions viewer at /submissions).
+[functions]
+  directory = "netlify/functions"
+
 # Nice fallback for any unknown route
 [[redirects]]
   from = "/*"
