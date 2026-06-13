@@ -54,9 +54,7 @@ const pageDescription = description ?? site.description;
     <script is:inline>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on('init', (user) => {
-          // The /submissions page manages its own login flow, so don't bounce
-          // editors to /admin when they log in there.
-          if (!user && !location.pathname.startsWith('/submissions')) {
+          if (!user) {
             window.netlifyIdentity.on('login', () => {
               document.location.href = '/admin/';
             });

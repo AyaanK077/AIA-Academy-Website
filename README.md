@@ -108,7 +108,7 @@ After your first deploy, do this one-time setup:
    (`contactEmail`).
 
 > 📊 **To read responses:** either in the Netlify dashboard (**Forms** → click a
-> form), or inside the site itself at **`/submissions`** — see Part 3b below.
+> form), or right inside the admin panel under **Form Submissions** — see Part 3b.
 >
 > 💬 **To change the questions:** edit the `FORMS` object in
 > `src/components/NetlifyForm.astro` (and mirror the field names in
@@ -118,11 +118,12 @@ After your first deploy, do this one-time setup:
 > ℹ️ The free Netlify plan includes **100 submissions/month**. That's plenty for
 > a school alumni network; if you ever exceed it, Netlify will prompt to upgrade.
 
-### Part 3b: View submissions inside the site (`/submissions`)
+### Part 3b: View submissions inside the admin panel
 
-There's a built-in, **editor-only** page at **`/submissions`** that lists every
-form submission grouped by form — no need to log into the Netlify dashboard. It
-uses the same email/password login as the admin panel.
+The admin panel (`/admin`) has a **Form Submissions** item in its left sidebar
+that lists every form submission grouped by form — no need to log into the
+Netlify dashboard. Because it lives inside the admin, only people invited as
+editors (Netlify Identity users) can see it.
 
 To switch it on, add two environment variables in Netlify (**Site configuration
 → Environment variables → Add a variable**):
@@ -132,10 +133,9 @@ To switch it on, add two environment variables in Netlify (**Site configuration
 | `NETLIFY_API_TOKEN` | a Netlify **personal access token** | Netlify avatar → **User settings → Applications → Personal access tokens → New access token**. Copy it immediately. |
 | `AIA_SITE_ID` | this site's **API ID** | **Project configuration → General → Project information → "Project ID" / "Site ID"**. (We use `AIA_SITE_ID` because plain `SITE_ID` is a reserved Netlify name you can't set.) |
 
-Then **Deploys → Trigger deploy → Deploy site**. Visit `/submissions`, log in
-with your editor account, and you'll see everything. The token stays on
-Netlify's servers and is never exposed to visitors; only logged-in editors can
-load the page's data.
+Then **Deploys → Trigger deploy → Deploy site**. Open `/admin`, log in, and click
+**Form Submissions** in the sidebar. The token stays on Netlify's servers and is
+never exposed to visitors; only logged-in editors can load the data.
 
 > The viewer is **read-only**. To publish a submission (e.g. feature a
 > Question-of-the-Month answer or publish a Q&A), copy it into a new entry in the

@@ -11,6 +11,8 @@
   <body>
     <!-- Decap CMS (the editing interface) -->
     <script src="https://unpkg.com/decap-cms@^3.3.3/dist/decap-cms.js"></script>
+    <!-- Adds the editor-only "Form Submissions" page to the CMS sidebar -->
+    <script src="./submissions.js"></script>
     <script>
       // After an invite/confirmation, send the user straight to the CMS.
       if (window.netlifyIdentity) {
