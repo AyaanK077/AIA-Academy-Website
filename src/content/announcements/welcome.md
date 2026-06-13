@@ -1,8 +1,10 @@
 ---
-title: "Welcome to the Al-Ihsan Academy Alumni network!"
-date: 2026-06-01
+title: Welcome to the Al-Ihsan Academy Alumni network!
+date: 2026-06-13
+summary: Assalamu alaikum! We're launching a free monthly newsletter and
+  platform to keep ISNS graduates connected. Register today and tell a fellow
+  alum.
 pinned: true
-summary: "Assalamu alaikum! We're launching a free monthly newsletter and platform to keep ISNS graduates connected. Register today and tell a fellow alum."
 ---
 
 We are excited, by the grace of Allah, to launch the Al-Ihsan Academy Alumni
