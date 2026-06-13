@@ -14,8 +14,11 @@
 // Required environment variables (set in Netlify → Site configuration →
 // Environment variables):
 //   NETLIFY_API_TOKEN  – a Netlify personal access token
-//   SITE_ID            – this site's API ID (Site configuration → General →
-//                        Site information → "Site ID")
+//   AIA_SITE_ID        – this site's API ID (Project configuration → General →
+//                        Project information → "Project ID" / "Site ID").
+//                        Named AIA_SITE_ID because plain SITE_ID is a reserved
+//                        Netlify name you can't set yourself. If Netlify happens
+//                        to inject SITE_ID at runtime, that's used first.
 // -----------------------------------------------------------------------------
 
 const API = 'https://api.netlify.com/api/v1';
@@ -29,11 +32,11 @@ export const handler = async (event, context) => {
 
   // 2) Read server-side config.
   const token = process.env.NETLIFY_API_TOKEN;
-  const siteId = process.env.SITE_ID || process.env.NETLIFY_SITE_ID;
+  const siteId = process.env.SITE_ID || process.env.AIA_SITE_ID;
   if (!token || !siteId) {
     return json(500, {
       error:
-        'Server not configured. An admin must set NETLIFY_API_TOKEN and SITE_ID ' +
+        'Server not configured. An admin must set NETLIFY_API_TOKEN and AIA_SITE_ID ' +
         'in the Netlify environment variables (see README), then redeploy.',
     });
   }

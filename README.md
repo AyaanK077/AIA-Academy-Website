@@ -129,8 +129,8 @@ To switch it on, add two environment variables in Netlify (**Site configuration
 
 | Variable | Value | Where to find it |
 |----------|-------|------------------|
-| `NETLIFY_API_TOKEN` | a Netlify **personal access token** | Netlify avatar (top-right) → **User settings → Applications → Personal access tokens → New access token**. Copy it immediately. |
-| `SITE_ID` | this site's **API ID** | **Site configuration → General → Site information → Site ID** |
+| `NETLIFY_API_TOKEN` | a Netlify **personal access token** | Netlify avatar → **User settings → Applications → Personal access tokens → New access token**. Copy it immediately. |
+| `AIA_SITE_ID` | this site's **API ID** | **Project configuration → General → Project information → "Project ID" / "Site ID"**. (We use `AIA_SITE_ID` because plain `SITE_ID` is a reserved Netlify name you can't set.) |
 
 Then **Deploys → Trigger deploy → Deploy site**. Visit `/submissions`, log in
 with your editor account, and you'll see everything. The token stays on
