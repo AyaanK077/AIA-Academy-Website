@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import FormEmbed from '../components/FormEmbed.astro';
+import NetlifyForm from '../components/NetlifyForm.astro';
 
 const qa = (await getCollection('qa')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
@@ -65,7 +65,7 @@ const qa = (await getCollection('qa')).sort(
         Your question may be answered in an upcoming issue. Please keep questions respectful and concise.
       </p>
       <div class="mx-auto mt-8 max-w-2xl">
-        <FormEmbed form="expertQa" title="Expert Q&A: Submit a question" height={900} />
+        <NetlifyForm form="expertQa" />
       </div>
     </div>
   </section>

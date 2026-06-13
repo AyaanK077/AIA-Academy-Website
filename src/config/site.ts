@@ -19,53 +19,15 @@ export const site = {
 };
 
 // ---------------------------------------------------------------------------
-// GOOGLE FORM LINKS
+// FORMS
 //
-// HOW TO FILL THESE IN (see README for full steps):
-//   1. Create a Google Form for each item below.
-//   2. Click "Send" -> the "< >" (embed) tab -> copy the URL inside src="...".
-//      It looks like: https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true
-//   3. Paste that URL as `embedUrl`.
-//   4. For `shareUrl`, use the normal share link (the "link" tab, the short
-//      https://forms.gle/... link is perfect), used for "open in new tab".
-//
-// Until you replace these, the pages will show a friendly "form coming soon"
-// placeholder instead of a broken embed.
+// The submission forms (registration, Expert Q&A, Question of the Month, alumni
+// updates) are built directly into the site as native Netlify Forms — see
+// `src/components/NetlifyForm.astro`. To add or change a question, edit the
+// `FORMS` object in that file. Responses appear in your Netlify dashboard under
+// "Forms"; turn on email alerts there (Forms → Settings & notifications).
+// No Google Forms or external setup required.
 // ---------------------------------------------------------------------------
-
-type FormLink = {
-  embedUrl: string;
-  shareUrl: string;
-};
-
-const PLACEHOLDER = 'REPLACE_ME';
-
-export const forms: Record<string, FormLink> = {
-  // Alumni registration (name, grad year, college/profession, contact)
-  register: {
-    embedUrl: PLACEHOLDER,
-    shareUrl: PLACEHOLDER,
-  },
-  // Submit a question for the Expert Q&A (answered by Muftis / scholars)
-  expertQa: {
-    embedUrl: PLACEHOLDER,
-    shareUrl: PLACEHOLDER,
-  },
-  // Submit an answer to the current Question of the Month
-  questionOfMonth: {
-    embedUrl: PLACEHOLDER,
-    shareUrl: PLACEHOLDER,
-  },
-  // Share a personal update / college experience / advice
-  alumniUpdate: {
-    embedUrl: PLACEHOLDER,
-    shareUrl: PLACEHOLDER,
-  },
-};
-
-export function formIsConfigured(form: FormLink): boolean {
-  return form.embedUrl !== PLACEHOLDER && form.embedUrl.length > 0;
-}
 
 // Primary navigation used in the header and footer.
 export const nav = [

@@ -5,8 +5,9 @@ students (Grades 9-12) of Al-Ihsan Academy (ISNS, Rolling Meadows).
 
 Built with **[Astro](https://astro.build)** + **Tailwind CSS**, with a friendly
 **[Decap CMS](https://decapcms.org)** admin panel so the editor can publish
-content without touching code. Forms use **Google Forms** (free, responses land
-in a Google Sheet). Hosted free on **Netlify**.
+content without touching code. Forms are built into the site using **Netlify
+Forms** (free, responses land in your Netlify dashboard). Hosted free on
+**Netlify**.
 
 ---
 
@@ -81,11 +82,11 @@ rebuilds, and the change appears on the live site within ~1 minute.
 
 ---
 
-## 📝 Part 3: Connect the forms (Google Forms)
+## 📝 Part 3: The forms (Netlify Forms)
 
-The registration and submission forms are Google Forms embedded into the site.
-Responses collect automatically in a Google Sheet, and you can turn on email
-notifications. You need to create **four** forms:
+The registration and submission forms are built right into the site — **no
+Google Forms or external setup needed**. They use **Netlify Forms**, which is
+included free with Netlify hosting. There are **four** forms:
 
 | Form | Used on page |
 |------|--------------|
@@ -94,30 +95,24 @@ notifications. You need to create **four** forms:
 | Question of the Month answer | `/question-of-the-month`, `/get-involved` |
 | Alumni update / college experience | `/get-involved`, `/alumni-insights` |
 
-For **each** form:
+These work automatically the moment the site is deployed to Netlify. After your
+first deploy, do this one-time setup:
 
-1. Create it at **[forms.google.com](https://forms.google.com)**.
-2. Click **Send** (top right) → choose the **`< >`** (embed HTML) tab.
-3. Copy the link inside `src="..."`. It looks like
-   `https://docs.google.com/forms/d/e/XXXXX/viewform?embedded=true`.
-4. Also click the **link** tab and copy the short `https://forms.gle/...` link.
-5. Open **`src/config/site.ts`** and paste them into the matching entry:
+1. In Netlify, open your site → **Forms**. You'll see the four forms listed.
+2. Click **Settings & usage → Form notifications → Add notification → Email
+   notification** to get an email on every submission. Send it to the address
+   in `src/config/site.ts` (`contactEmail`).
 
-   ```ts
-   register: {
-     embedUrl: 'https://docs.google.com/forms/d/e/XXXXX/viewform?embedded=true',
-     shareUrl: 'https://forms.gle/XXXXX',
-   },
-   ```
-
-6. Save, commit, and push (or edit the file directly on GitHub). Netlify rebuilds.
-
-Until a form is filled in, that page shows a friendly **"Form coming soon"**
-message instead of a broken embed, so nothing looks broken in the meantime.
-
-> 📊 To see responses: open the form → **Responses** tab → click the green
-> Sheets icon to send them to a spreadsheet. Turn on **Settings → Get email
-> notifications for new responses** to be emailed each submission.
+> 📊 **To read responses:** Netlify dashboard → your site → **Forms** → click a
+> form to see every submission. You can export them to CSV anytime.
+>
+> 💬 **To change the questions:** edit the `FORMS` object in
+> `src/components/NetlifyForm.astro` (and mirror the field names in
+> `public/__forms.html` so Netlify keeps detecting them), then commit. No code
+> knowledge needed beyond copying the existing pattern.
+>
+> ℹ️ The free Netlify plan includes **100 submissions/month**. That's plenty for
+> a school alumni network; if you ever exceed it, Netlify will prompt to upgrade.
 
 ---
 
@@ -150,7 +145,8 @@ public/
   uploads/          uploaded PDFs & images land here
   favicon.svg
 src/
-  config/site.ts    ← site name, contact email, Google Form links (EDIT THIS)
+  config/site.ts    ← site name, contact email, navigation (EDIT THIS)
+  components/NetlifyForm.astro ← the four on-site forms (edit questions here)
   content/          all editable content (Markdown), managed via /admin
     newsletters/  announcements/  questions/  qa/  insights/
     config.ts       content schemas

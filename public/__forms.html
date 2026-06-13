@@ -1,0 +1,65 @@
+<!--
+  Netlify Forms detection file.
+
+  Netlify discovers forms by scanning the static HTML at deploy time. Some of our
+  real forms only appear on the page conditionally (e.g. the Question of the Month
+  form shows only when a question is "open"). This hidden file declares every form
+  and every field once, so Netlify ALWAYS registers all four — no matter what is
+  showing on the live pages. Visitors never see this file.
+
+  IMPORTANT: if you add/rename a field in src/components/NetlifyForm.astro, mirror
+  the change here so the new field is captured.
+-->
+<!doctype html>
+<html>
+  <head><meta name="robots" content="noindex" /></head>
+  <body>
+    <!-- Alumni Registration -->
+    <form name="register" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="grad_year" />
+      <input type="text" name="status" />
+      <input type="text" name="college" />
+      <input type="text" name="field_of_study" />
+      <input type="text" name="location" />
+      <input type="text" name="mentor" />
+      <textarea name="notes"></textarea>
+      <input name="bot-field" />
+    </form>
+
+    <!-- Expert Q&A question -->
+    <form name="expertQa" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="grad_year" />
+      <textarea name="question"></textarea>
+      <input type="text" name="category" />
+      <input type="text" name="publish_consent" />
+      <input name="bot-field" />
+    </form>
+
+    <!-- Question of the Month answer -->
+    <form name="questionOfMonth" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="grad_year" />
+      <textarea name="answer"></textarea>
+      <input type="text" name="publish_consent" />
+      <input name="bot-field" />
+    </form>
+
+    <!-- Alumni update / college experience (with photo upload) -->
+    <form name="alumniUpdate" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="grad_year" />
+      <input type="text" name="college" />
+      <textarea name="story"></textarea>
+      <textarea name="advice"></textarea>
+      <input type="text" name="publish_consent" />
+      <input type="file" name="photo" />
+      <input name="bot-field" />
+    </form>
+  </body>
+</html>
