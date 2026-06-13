@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FormEmbed from '../components/FormEmbed.astro';
+
+const qa = (await getCollection('qa')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout
+  title="Expert Q&A"
+  description="Submit questions answered by local Muftis and scholars, and read past answers."
+>
+  <PageHero
+    eyebrow="Ask the Scholars"
+    title="Expert Q&A"
+    subtitle="Submit your questions to be answered by local Muftis and scholars. Answers are published here and in the newsletter."
+  />
+
+  <section class="container-page py-16">
+    <SectionHeading eyebrow="Answered" title="Recent answers" />
+    {qa.length > 0 ? (
+      <div class="mt-8 space-y-4">
+        {qa.map(async (item) => {
+          const { Content } = await item.render();
+          return (
+            <details class="card group">
+              <summary class="cursor-pointer list-none">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    {item.data.category && (
+                      <span class="text-xs font-semibold uppercase tracking-widest text-gold-600">
+                        {item.data.category}
+                      </span>
+                    )}
+                    <p class="mt-1 text-lg font-medium text-emerald-800">{item.data.question}</p>
+                  </div>
+                  <span class="mt-1 text-gold-500 transition-transform group-open:rotate-45">＋</span>
+                </div>
+              </summary>
+              <div class="prose-content mt-4 border-t border-cream-300 pt-4">
+                <Content />
+                {item.data.answeredBy && (
+                  <p class="mt-4 text-sm font-medium text-emerald-700">— {item.data.answeredBy}</p>
+                )}
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    ) : (
+      <p class="mt-6 text-ink/70">
+        No answers published yet. Be the first to submit a question below, in shaa Allah.
+      </p>
+    )}
+  </section>
+
+  <section id="submit" class="bg-cream-200/60 py-16">
+    <div class="container-page">
+      <SectionHeading eyebrow="Ask a Question" title="Submit a question for the scholars" align="center" />
+      <p class="mx-auto mt-4 max-w-xl text-center text-ink/75">
+        Your question may be answered in an upcoming issue. Please keep questions respectful and concise.
+      </p>
+      <div class="mx-auto mt-8 max-w-2xl">
+        <FormEmbed form="expertQa" title="Expert Q&A — Submit a question" height={900} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

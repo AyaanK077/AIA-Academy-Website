@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const newsletters = await getCollection('newsletters');
+  return newsletters.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, issue, date, summary, pdf, coverImage } = entry.data;
+const dateStr = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={title} description={summary}>
+  <article>
+    <header class="pattern-bg text-white">
+      <div class="container-page py-14">
+        <a href="/newsletters" class="text-sm text-gold-300 hover:text-white">← Back to archive</a>
+        <p class="mt-4 text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">
+          {issue ?? dateStr}
+        </p>
+        <h1 class="mt-2 font-display text-4xl text-white md:text-5xl">{title}</h1>
+        <p class="mt-4 max-w-2xl text-cream-100/90">{summary}</p>
+        {pdf && (
+          <a href={pdf} target="_blank" rel="noopener" class="btn-primary mt-6">Download PDF</a>
+        )}
+      </div>
+    </header>
+
+    <div class="container-page py-14">
+      {coverImage && (
+        <img src={coverImage} alt={title} class="mb-10 w-full rounded-2xl border border-cream-300" />
+      )}
+      <div class="prose-content mx-auto">
+        <Content />
+      </div>
+
+      {pdf && (
+        <div class="mx-auto mt-12 max-w-prose rounded-2xl border border-cream-300 bg-cream-50 p-6 text-center">
+          <p class="text-ink/80">Prefer to read the full issue as a PDF?</p>
+          <a href={pdf} target="_blank" rel="noopener" class="btn-primary mt-4">Open the PDF</a>
+        </div>
+      )}
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,111 @@
+# -----------------------------------------------------------------------------
+# Decap CMS configuration
+# This powers the editor at /admin. It commits changes straight to GitHub,
+# which triggers Netlify to rebuild the site automatically.
+#
+# Uses Netlify Identity + Git Gateway so the editor logs in with email/password
+# (no GitHub account needed). See the README for one-time setup.
+# -----------------------------------------------------------------------------
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Where uploaded files (PDFs, images) are stored in the repo / served from.
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# Friendlier editorial flow with drafts (optional but nice for non-technical use).
+publish_mode: editorial_workflow
+
+# Show a clear label in the CMS
+site_url: https://aia-academy-alumni.netlify.app
+display_url: https://aia-academy-alumni.netlify.app
+logo_url: /favicon.svg
+
+collections:
+  # ---------------------------------------------------------------- Newsletters
+  - name: "newsletters"
+    label: "📰 Newsletters"
+    label_singular: "Newsletter"
+    folder: "src/content/newsletters"
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    summary: "{{title}} — {{date}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Issue label (e.g. Issue 1 — June 2026)", name: "issue", widget: "string", required: false }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Short summary (shown on cards)", name: "summary", widget: "text" }
+      - { label: "Cover image", name: "coverImage", widget: "image", required: false }
+      - { label: "Newsletter PDF", name: "pdf", widget: "file", required: false, hint: "Upload the monthly PDF here." }
+      - { label: "Feature on homepage?", name: "featured", widget: "boolean", default: false }
+      - { label: "Body (optional written version)", name: "body", widget: "markdown", required: false }
+
+  # -------------------------------------------------------------- Announcements
+  - name: "announcements"
+    label: "📢 Announcements"
+    label_singular: "Announcement"
+    folder: "src/content/announcements"
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    summary: "{{title}} — {{date}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Pin to top?", name: "pinned", widget: "boolean", default: false }
+      - { label: "Details (optional)", name: "body", widget: "markdown", required: false }
+
+  # --------------------------------------------------------- Question of Month
+  - name: "questions"
+    label: "❓ Question of the Month"
+    label_singular: "Question"
+    folder: "src/content/questions"
+    create: true
+    slug: "{{year}}-{{month}}"
+    summary: "{{month}} — {{question}}"
+    fields:
+      - { label: "Month (e.g. June 2026)", name: "month", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "The question", name: "question", widget: "text" }
+      - label: "Submissions status"
+        name: "status"
+        widget: "select"
+        options: ["open", "closed"]
+        default: "open"
+      - { label: "Previous month's winner (name)", name: "previousWinner", widget: "string", required: false }
+      - { label: "Previous winning answer", name: "previousAnswer", widget: "text", required: false }
+      - { label: "Notes (optional)", name: "body", widget: "markdown", required: false }
+
+  # ------------------------------------------------------------------ Expert Q&A
+  - name: "qa"
+    label: "💬 Expert Q&A"
+    label_singular: "Q&A Answer"
+    folder: "src/content/qa"
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    summary: "{{question}}"
+    fields:
+      - { label: "Question", name: "question", widget: "text" }
+      - { label: "Answered by (e.g. Mufti ...)", name: "answeredBy", widget: "string", required: false }
+      - { label: "Category", name: "category", widget: "string", required: false }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "The answer", name: "body", widget: "markdown" }
+
+  # ------------------------------------------------------------- Alumni Insights
+  - name: "insights"
+    label: "🎓 Alumni Insights"
+    label_singular: "Insight"
+    folder: "src/content/insights"
+    create: true
+    slug: "{{year}}-{{month}}-{{slug}}"
+    summary: "{{title}} — {{author}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Author", name: "author", widget: "string" }
+      - { label: "Graduation year", name: "gradYear", widget: "string", required: false }
+      - { label: "College / Profession", name: "college", widget: "string", required: false }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Short summary", name: "summary", widget: "text" }
+      - { label: "Full story", name: "body", widget: "markdown" }

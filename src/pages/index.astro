@@ -1,0 +1,193 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import NewsletterCard from '../components/NewsletterCard.astro';
+import { site } from '../config/site';
+
+// Latest newsletter (prefer one marked featured, else most recent by date).
+const newsletters = (await getCollection('newsletters')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const latestNewsletter = newsletters.find((n) => n.data.featured) ?? newsletters[0];
+
+// Latest announcements (pinned first, then by date).
+const announcements = (await getCollection('announcements'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .sort((a, b) => Number(b.data.pinned) - Number(a.data.pinned))
+  .slice(0, 3);
+
+// Current Question of the Month (most recent, open).
+const questions = (await getCollection('questions')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const currentQuestion = questions[0];
+
+const features = [
+  {
+    icon: '📰',
+    title: 'ISNS Updates',
+    body: 'Stay informed of key community news, events, and milestones from Al-Ihsan School.',
+  },
+  {
+    icon: '🕌',
+    title: 'Physical Perspective of the Quran',
+    body: 'Stay practically and spiritually connected — Quran museums, calligraphy, and the physical aspects of the Quran.',
+  },
+  {
+    icon: '🎓',
+    title: 'Alumni Insights',
+    body: 'College-aged alumni share campus experiences, achievements, and advice with graduating students.',
+  },
+  {
+    icon: '💬',
+    title: 'Expert Q&A',
+    body: 'Submit questions to be answered by local Muftis and scholars.',
+  },
+  {
+    icon: '❓',
+    title: 'Question of the Month',
+    body: 'An interactive trivia or reflection question — submit your answer and winners are announced next issue.',
+  },
+  {
+    icon: '🤝',
+    title: 'Peer Mentorship',
+    body: 'A solid, deeply connected network — growing toward job assistance and technical peer support.',
+  },
+];
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="pattern-bg text-white">
+    <div class="container-page grid items-center gap-10 py-20 md:grid-cols-2 md:py-28">
+      <div>
+        <p class="font-arabic text-xl text-gold-300">السلام عليكم ورحمة الله</p>
+        <h1 class="mt-3 font-display text-4xl leading-tight text-white md:text-6xl">
+          Stay connected to your <span class="text-gold-300">ISNS family</span> — wherever life takes you.
+        </h1>
+        <p class="mt-5 max-w-xl text-lg text-cream-100/90">
+          A free monthly newsletter and platform bridging past and present senior students of
+          Al-Ihsan Academy. Keeping alumni engaged, grounded in faith, and supporting one another.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="/register" class="btn-primary">Join the alumni network — free</a>
+          <a href="/newsletters" class="btn-light">Read the newsletter</a>
+        </div>
+      </div>
+      <div class="hidden md:block">
+        <div class="rounded-3xl border border-white/15 bg-white/5 p-8 backdrop-blur">
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">Our Mission</p>
+          <p class="mt-4 font-display text-2xl leading-relaxed text-cream-50">
+            “To build a solid, deeply connected alumni network that keeps graduates engaged with the
+            ISNS community, grounded in their faith, and fostering peer-to-peer mentorship.”
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest announcement + current newsletter -->
+  <section class="container-page -mt-10 grid gap-6 md:grid-cols-3">
+    <div class="card md:col-span-2">
+      <p class="eyebrow">Latest Announcement</p>
+      {announcements.length > 0 ? (
+        <>
+          <h3 class="mt-2 text-2xl">{announcements[0].data.title}</h3>
+          <p class="mt-1 text-sm text-ink/60">
+            {announcements[0].data.date.toLocaleDateString('en-US', {
+              year: 'numeric', month: 'long', day: 'numeric',
+            })}
+          </p>
+          <p class="mt-3 text-ink/80">{announcements[0].data.summary}</p>
+        </>
+      ) : (
+        <p class="mt-3 text-ink/70">No announcements yet — check back soon, in shaa Allah.</p>
+      )}
+    </div>
+
+    <div class="card flex flex-col bg-emerald-700 text-cream-50">
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">Current Newsletter</p>
+      {latestNewsletter ? (
+        <>
+          <h3 class="mt-2 text-2xl text-white">{latestNewsletter.data.title}</h3>
+          <p class="mt-2 flex-1 text-sm text-cream-100/85">{latestNewsletter.data.summary}</p>
+          <a href={`/newsletters/${latestNewsletter.slug}`} class="btn-light mt-4 self-start">Read this issue</a>
+        </>
+      ) : (
+        <p class="mt-3 flex-1 text-cream-100/85">The first issue is on its way, in shaa Allah.</p>
+      )}
+    </div>
+  </section>
+
+  <!-- What's inside -->
+  <section class="container-page py-20">
+    <SectionHeading eyebrow="What's Inside" title="Every issue, something to connect with" align="center" />
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {features.map((f) => (
+        <div class="card">
+          <div class="text-3xl">{f.icon}</div>
+          <h3 class="mt-3 text-xl">{f.title}</h3>
+          <p class="mt-2 text-sm text-ink/75">{f.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Question of the month strip -->
+  {currentQuestion && (
+    <section class="bg-cream-200/70 py-16">
+      <div class="container-page grid items-center gap-8 md:grid-cols-3">
+        <div class="md:col-span-2">
+          <p class="eyebrow">Question of the Month — {currentQuestion.data.month}</p>
+          <h2 class="mt-2 text-2xl md:text-3xl">{currentQuestion.data.question}</h2>
+          {currentQuestion.data.previousWinner && (
+            <p class="mt-3 text-ink/70">
+              🏆 Last month's winner: <strong>{currentQuestion.data.previousWinner}</strong>
+            </p>
+          )}
+        </div>
+        <div class="flex flex-col gap-3">
+          <a href="/get-involved#question-of-the-month" class="btn-primary">Submit your answer</a>
+          <a href="/question-of-the-month" class="btn-secondary">View details</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Recent newsletters -->
+  {newsletters.length > 0 && (
+    <section class="container-page py-20">
+      <div class="flex items-end justify-between">
+        <SectionHeading eyebrow="Archive" title="Recent newsletters" />
+        <a href="/newsletters" class="hidden text-sm font-medium text-emerald-700 hover:text-gold-600 sm:block">
+          View all →
+        </a>
+      </div>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {newsletters.slice(0, 3).map((n) => (
+          <NewsletterCard
+            title={n.data.title}
+            issue={n.data.issue}
+            date={n.data.date}
+            summary={n.data.summary}
+            slug={n.slug}
+            pdf={n.data.pdf}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="pattern-bg text-white">
+    <div class="container-page py-16 text-center">
+      <h2 class="font-display text-3xl text-white md:text-4xl">Are you an Al-Ihsan graduate?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-cream-100/90">
+        Registration is completely free and always will be. Join the network and never lose touch
+        with your ISNS community.
+      </p>
+      <a href="/register" class="btn-primary mt-7">Register now</a>
+    </div>
+  </section>
+</BaseLayout>

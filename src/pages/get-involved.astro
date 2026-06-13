@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FormEmbed from '../components/FormEmbed.astro';
+
+const sections = [
+  {
+    id: 'alumni-update',
+    eyebrow: 'Share Your Story',
+    title: 'Submit a personal update or college advice',
+    blurb:
+      'Tell us about your campus experience, achievements, or advice for students still in the Sunday School. Selected stories appear in Alumni Insights.',
+    form: 'alumniUpdate',
+  },
+  {
+    id: 'expert-qa',
+    eyebrow: 'Ask the Scholars',
+    title: 'Submit a question for the Expert Q&A',
+    blurb:
+      'Send a question to be answered by local Muftis and scholars. Answers are published on the site and in the newsletter.',
+    form: 'expertQa',
+  },
+  {
+    id: 'question-of-the-month',
+    eyebrow: 'Engage',
+    title: 'Answer the Question of the Month',
+    blurb:
+      'Submit your answer to this month\'s reflection or trivia question. Winners are announced in the next issue, in shaa Allah.',
+    form: 'questionOfMonth',
+  },
+] as const;
+---
+
+<BaseLayout
+  title="Get Involved"
+  description="Submit questions, answers, and your college experiences to the Al-Ihsan Academy Alumni community."
+>
+  <PageHero
+    eyebrow="Get Involved"
+    title="Your voice keeps the network alive"
+    subtitle="Three quick ways to contribute. Every submission helps us build a stronger, more connected alumni family."
+  />
+
+  <!-- Quick nav -->
+  <section class="container-page py-10">
+    <div class="grid gap-4 sm:grid-cols-3">
+      {sections.map((s) => (
+        <a href={`#${s.id}`} class="card text-center hover:border-gold-400">
+          <p class="eyebrow">{s.eyebrow}</p>
+          <p class="mt-2 font-display text-lg text-emerald-800">{s.title}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  {sections.map((s, i) => (
+    <section id={s.id} class={`py-14 ${i % 2 === 1 ? 'bg-cream-200/60' : ''}`}>
+      <div class="container-page">
+        <SectionHeading eyebrow={s.eyebrow} title={s.title} align="center" />
+        <p class="mx-auto mt-4 max-w-xl text-center text-ink/75">{s.blurb}</p>
+        <div class="mx-auto mt-8 max-w-2xl">
+          <FormEmbed form={s.form} title={s.title} height={900} />
+        </div>
+      </div>
+    </section>
+  ))}
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+import { site, nav } from '../config/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="pattern-bg mt-20 text-cream-100">
+  <div class="container-page grid gap-10 py-14 md:grid-cols-3">
+    <div>
+      <p class="font-arabic text-2xl text-gold-300">بسم الله الرحمن الرحيم</p>
+      <h3 class="mt-3 font-display text-2xl text-white">{site.name}</h3>
+      <p class="mt-2 max-w-sm text-sm text-cream-200/90">{site.description}</p>
+    </div>
+
+    <div>
+      <h4 class="text-sm font-semibold uppercase tracking-widest text-gold-300">Explore</h4>
+      <ul class="mt-4 space-y-2 text-sm">
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} class="text-cream-100/90 hover:text-gold-300">{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="text-sm font-semibold uppercase tracking-widest text-gold-300">Get Involved</h4>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a href="/register" class="text-cream-100/90 hover:text-gold-300">Join the alumni network</a></li>
+        <li><a href="/get-involved" class="text-cream-100/90 hover:text-gold-300">Submit a question or update</a></li>
+        <li><a href="/alumni-insights" class="text-cream-100/90 hover:text-gold-300">Alumni insights</a></li>
+        <li>
+          <a href={`mailto:${site.contactEmail}`} class="text-cream-100/90 hover:text-gold-300">
+            {site.contactEmail}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-cream-200/80 sm:flex-row">
+      <p>© {year} {site.name}. A free community initiative — {site.school}.</p>
+      <p>May Allah reward all who contribute. Built with care.</p>
+    </div>
+  </div>
+</footer>

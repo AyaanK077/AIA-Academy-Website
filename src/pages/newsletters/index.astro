@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import NewsletterCard from '../../components/NewsletterCard.astro';
+
+const newsletters = (await getCollection('newsletters')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title="Newsletter Archive" description="Read and download every issue of the Al-Ihsan Academy Alumni newsletter.">
+  <PageHero
+    eyebrow="Archive"
+    title="Newsletter Archive"
+    subtitle="Every monthly issue, in one place. Read online or download the PDF."
+  />
+
+  <section class="container-page py-16">
+    {newsletters.length > 0 ? (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {newsletters.map((n) => (
+          <NewsletterCard
+            title={n.data.title}
+            issue={n.data.issue}
+            date={n.data.date}
+            summary={n.data.summary}
+            slug={n.slug}
+            pdf={n.data.pdf}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-gold-300 bg-cream-50 p-12 text-center">
+        <p class="font-display text-2xl text-emerald-800">No issues published yet</p>
+        <p class="mx-auto mt-3 max-w-md text-ink/70">
+          The first newsletter is on its way, in shaa Allah. Register to be notified when it's out.
+        </p>
+        <a href="/register" class="btn-primary mt-6">Register for updates</a>
+      </div>
+    )}
+  </section>
+</BaseLayout>

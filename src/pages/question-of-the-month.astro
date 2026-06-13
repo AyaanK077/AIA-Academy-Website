@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FormEmbed from '../components/FormEmbed.astro';
+
+const questions = (await getCollection('questions')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const current = questions[0];
+const past = questions.slice(1);
+---
+
+<BaseLayout
+  title="Question of the Month"
+  description="Answer this month's reflection question and see past winners."
+>
+  <PageHero
+    eyebrow="Engage"
+    title="Question of the Month"
+    subtitle="An interactive trivia or reflection question. Submit your answer — winners are announced in the following issue, in shaa Allah."
+  />
+
+  <section class="container-page py-16">
+    {current ? (
+      <div class="rounded-3xl bg-emerald-700 p-8 text-cream-50 md:p-12">
+        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-gold-300">
+          {current.data.month}
+          {current.data.status === 'closed' && ' · Submissions closed'}
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white md:text-4xl">{current.data.question}</h2>
+        {current.data.previousWinner && (
+          <p class="mt-6 rounded-xl bg-white/10 p-4">
+            🏆 <strong>Last month's winner:</strong> {current.data.previousWinner}
+            {current.data.previousAnswer && (
+              <span class="mt-1 block text-cream-100/85">“{current.data.previousAnswer}”</span>
+            )}
+          </p>
+        )}
+        {current.data.status === 'open' && (
+          <a href="#submit" class="btn-light mt-7">Submit your answer</a>
+        )}
+      </div>
+    ) : (
+      <p class="text-center text-ink/70">No question posted yet — check back soon, in shaa Allah.</p>
+    )}
+  </section>
+
+  {current && current.data.status === 'open' && (
+    <section id="submit" class="container-page pb-16">
+      <SectionHeading eyebrow="Your Answer" title="Submit your response" align="center" />
+      <div class="mx-auto mt-8 max-w-2xl">
+        <FormEmbed form="questionOfMonth" title="Question of the Month — Submit your answer" height={900} />
+      </div>
+    </section>
+  )}
+
+  {past.length > 0 && (
+    <section class="bg-cream-200/60 py-16">
+      <div class="container-page">
+        <SectionHeading eyebrow="History" title="Past questions & winners" />
+        <div class="mt-8 space-y-4">
+          {past.map((q) => (
+            <div class="card">
+              <p class="text-xs font-semibold uppercase tracking-widest text-gold-600">{q.data.month}</p>
+              <p class="mt-1 text-lg text-emerald-800">{q.data.question}</p>
+              {q.data.previousWinner && (
+                <p class="mt-2 text-sm text-ink/70">🏆 Winner: {q.data.previousWinner}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

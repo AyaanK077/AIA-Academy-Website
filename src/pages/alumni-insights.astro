@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const insights = (await getCollection('insights')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout
+  title="Alumni Insights"
+  description="College experiences, achievements, and advice from Al-Ihsan Academy graduates."
+>
+  <PageHero
+    eyebrow="From Our Graduates"
+    title="Alumni Insights"
+    subtitle="College-aged alumni share their campus experiences, achievements, and advice with students still in the Sunday School."
+  />
+
+  <section class="container-page py-16">
+    {insights.length > 0 ? (
+      <div class="grid gap-6 md:grid-cols-2">
+        {insights.map(async (item) => {
+          const { Content } = await item.render();
+          return (
+            <article class="card flex flex-col">
+              <p class="text-xs font-semibold uppercase tracking-widest text-gold-600">
+                {item.data.gradYear}{item.data.college ? ` · ${item.data.college}` : ''}
+              </p>
+              <h2 class="mt-2 text-2xl">{item.data.title}</h2>
+              <p class="mt-1 text-sm text-ink/60">By {item.data.author}</p>
+              <div class="prose-content mt-4 flex-1 text-sm">
+                <Content />
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    ) : (
+      <div class="rounded-2xl border-2 border-dashed border-gold-300 bg-cream-50 p-12 text-center">
+        <p class="font-display text-2xl text-emerald-800">No stories yet</p>
+        <p class="mx-auto mt-3 max-w-md text-ink/70">
+          Are you a graduate? Be the first to share your experience.
+        </p>
+        <a href="/get-involved#alumni-update" class="btn-primary mt-6">Share your story</a>
+      </div>
+    )}
+  </section>
+
+  <section class="pattern-bg text-white">
+    <div class="container-page py-14 text-center">
+      <h2 class="font-display text-3xl text-white">Have advice to share?</h2>
+      <p class="mx-auto mt-3 max-w-xl text-cream-100/90">
+        Your experience could guide a graduating student. Tell us your story.
+      </p>
+      <a href="/get-involved#alumni-update" class="btn-primary mt-6">Submit your update</a>
+    </div>
+  </section>
+</BaseLayout>

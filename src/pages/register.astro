@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FormEmbed from '../components/FormEmbed.astro';
+---
+
+<BaseLayout
+  title="Alumni Registration"
+  description="Free sign-up for Al-Ihsan Academy alumni — register your contact info, graduation year, and college or profession."
+>
+  <PageHero
+    eyebrow="Join Us"
+    title="Alumni Registration"
+    subtitle="Free, always. Register your contact information, graduation year, and current college or profession to join the network."
+  />
+
+  <section class="container-page py-16">
+    <div class="grid gap-10 lg:grid-cols-3">
+      <aside class="lg:col-span-1">
+        <div class="card bg-emerald-700 text-cream-50">
+          <h2 class="text-2xl text-white">Why register?</h2>
+          <ul class="mt-4 space-y-3 text-sm text-cream-100/90">
+            <li>📬 Receive the monthly newsletter</li>
+            <li>🎓 Connect with fellow graduates</li>
+            <li>💬 Submit questions and answers</li>
+            <li>🤝 Access future job & peer support</li>
+          </ul>
+          <p class="mt-6 text-sm text-cream-100/80">
+            We never share your information. Subscription is completely free — no payment is ever required.
+          </p>
+        </div>
+      </aside>
+
+      <div class="lg:col-span-2">
+        <FormEmbed form="register" title="Alumni Registration Form" height={1200} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

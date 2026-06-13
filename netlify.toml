@@ -1,0 +1,15 @@
+# Netlify build configuration for the Al-Ihsan Academy Alumni site.
+# When you connect this repo in Netlify, these settings are picked up automatically.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Nice fallback for any unknown route
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404

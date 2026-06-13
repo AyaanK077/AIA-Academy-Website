@@ -1,0 +1,66 @@
+---
+import { site, nav } from '../config/site';
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="sticky top-0 z-50 border-b border-cream-300 bg-cream-50/95 backdrop-blur">
+  <div class="container-page flex items-center justify-between py-3">
+    <a href="/" class="flex items-center gap-3">
+      <span
+        class="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-700 font-display text-xl font-bold text-gold-300"
+        aria-hidden="true">ﷲ</span>
+      <span class="leading-tight">
+        <span class="block font-display text-lg font-bold text-emerald-800">{site.name}</span>
+        <span class="block text-xs uppercase tracking-[0.18em] text-gold-600">{site.tagline}</span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class={`rounded-full px-3 py-2 text-sm font-medium ${
+            isActive(item.href)
+              ? 'bg-emerald-700 text-white'
+              : 'text-ink/80 hover:bg-emerald-50 hover:text-emerald-800'
+          }`}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a href="/register" class="btn-primary ml-2 px-5 py-2 text-sm">Register</a>
+    </nav>
+
+    <!-- Mobile menu toggle (CSS-only via checkbox) -->
+    <label class="cursor-pointer p-2 lg:hidden" for="nav-toggle" aria-label="Open menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" class="text-emerald-800">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </label>
+  </div>
+
+  <input type="checkbox" id="nav-toggle" class="peer hidden" />
+  <nav
+    class="hidden border-t border-cream-300 bg-cream-50 px-5 pb-4 peer-checked:block lg:!hidden"
+    aria-label="Mobile"
+  >
+    {nav.map((item) => (
+      <a
+        href={item.href}
+        class={`block rounded-lg px-3 py-2 text-sm font-medium ${
+          isActive(item.href)
+            ? 'bg-emerald-700 text-white'
+            : 'text-ink/80 hover:bg-emerald-50'
+        }`}
+      >
+        {item.label}
+      </a>
+    ))}
+    <a href="/register" class="btn-primary mt-2 w-full">Register</a>
+  </nav>
+</header>

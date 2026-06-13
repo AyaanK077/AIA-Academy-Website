@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream-100 text-ink font-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display text-emerald-800;
+  }
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  /* Subtle geometric Islamic pattern used behind hero / section accents */
+  .pattern-bg {
+    background-color: #14674f;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23b8860b' stroke-width='1' stroke-opacity='0.18'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3Cpath d='M30 12l18 18-18 18-18-18z'/%3E%3Ccircle cx='30' cy='30' r='6'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-medium tracking-wide transition-all focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  .btn-primary {
+    @apply btn bg-gold-500 text-white hover:bg-gold-600 focus:ring-gold-400;
+  }
+  .btn-secondary {
+    @apply btn border border-emerald-700 text-emerald-700 hover:bg-emerald-700 hover:text-white focus:ring-emerald-500;
+  }
+  .btn-light {
+    @apply btn bg-white/95 text-emerald-800 hover:bg-white focus:ring-white;
+  }
+
+  .card {
+    @apply rounded-2xl border border-cream-300 bg-white p-6 shadow-sm transition-shadow hover:shadow-md;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .eyebrow {
+    @apply text-sm font-semibold uppercase tracking-[0.2em] text-gold-600;
+  }
+
+  /* Long-form readable content (newsletters, about, answers) */
+  .prose-content {
+    @apply max-w-prose leading-relaxed text-ink/90;
+  }
+  .prose-content h2 { @apply mt-10 mb-3 text-2xl; }
+  .prose-content h3 { @apply mt-8 mb-2 text-xl; }
+  .prose-content p { @apply my-4; }
+  .prose-content ul { @apply my-4 list-disc space-y-1 pl-6; }
+  .prose-content ol { @apply my-4 list-decimal space-y-1 pl-6; }
+  .prose-content a { @apply text-emerald-700 underline underline-offset-2 hover:text-gold-600; }
+  .prose-content blockquote { @apply my-6 border-l-4 border-gold-400 bg-cream-100 py-2 pl-4 italic; }
+  .prose-content img { @apply my-6 rounded-xl; }
+}
