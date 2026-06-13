@@ -11,8 +11,8 @@ export const site = {
   tagline: 'Newsletter & Web Platform',
   school: 'Al-Ihsan School (ISNS, Rolling Meadows)',
   description:
-    'A free alumni network for past and present senior students (Grades 9–12) of ' +
-    'Al-Ihsan Academy — keeping graduates connected to the ISNS community, grounded ' +
+    'A free alumni network for past and present senior students (Grades 9-12) of ' +
+    'Al-Ihsan Academy, keeping graduates connected to the ISNS community, grounded ' +
     'in their faith, and supported through peer mentorship.',
   // Where alumni / visitors can reach the editor. Change to a real address.
   contactEmail: 'alumni@al-ihsan-academy.org',
@@ -27,7 +27,7 @@ export const site = {
 //      It looks like: https://docs.google.com/forms/d/e/XXXX/viewform?embedded=true
 //   3. Paste that URL as `embedUrl`.
 //   4. For `shareUrl`, use the normal share link (the "link" tab, the short
-//      https://forms.gle/... link is perfect) — used for "open in new tab".
+//      https://forms.gle/... link is perfect), used for "open in new tab".
 //
 // Until you replace these, the pages will show a friendly "form coming soon"
 // placeholder instead of a broken embed.

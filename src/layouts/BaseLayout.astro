@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const pageTitle = title ? `${title} — ${site.shortName}` : `${site.name} — ${site.tagline}`;
+const pageTitle = title ? `${title} | ${site.shortName}` : `${site.name} | ${site.tagline}`;
 const pageDescription = description ?? site.description;
 ---
 
@@ -29,6 +29,11 @@ const pageDescription = description ?? site.description;
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
 
+    <!-- Netlify Identity widget: lets invite & password-reset links work from
+         any page. When a link like /#invite_token=... lands here, the widget
+         catches it and opens the "set your password" dialog. -->
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
     <!-- Fonts: Cormorant Garamond (display), Inter (body), Amiri (Arabic accent) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,5 +48,19 @@ const pageDescription = description ?? site.description;
       <slot />
     </main>
     <Footer />
+
+    <!-- After a user accepts an invite / resets a password on any page, send
+         them straight to the admin panel once they log in. -->
+    <script is:inline>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+    </script>
   </body>
 </html>

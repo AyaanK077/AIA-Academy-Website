@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Deep emerald — primary brand color
+        // Deep emerald: primary brand color
         emerald: {
           50: '#eef6f1',
           100: '#d6eadf',
@@ -17,7 +17,7 @@ export default {
           800: '#0e4a39',
           900: '#0a3829',
         },
-        // Warm gold — accent
+        // Warm gold: accent
         gold: {
           50: '#fbf6e7',
           100: '#f6ead0',

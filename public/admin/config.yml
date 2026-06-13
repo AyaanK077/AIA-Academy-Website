@@ -11,6 +11,12 @@ backend:
   name: git-gateway
   branch: main
 
+# Local testing: when you run `npx decap-server` alongside `npm run dev`, the
+# admin edits the local files directly with no login. Open it in dev at
+# http://localhost:4321/admin/index.html (the dev server needs the explicit
+# index.html; the live Netlify site uses /admin/). Ignored in production.
+local_backend: true
+
 # Where uploaded files (PDFs, images) are stored in the repo / served from.
 media_folder: "public/uploads"
 public_folder: "/uploads"
@@ -19,8 +25,8 @@ public_folder: "/uploads"
 publish_mode: editorial_workflow
 
 # Show a clear label in the CMS
-site_url: https://aia-academy-alumni.netlify.app
-display_url: https://aia-academy-alumni.netlify.app
+site_url: https://aia-academy-website.netlify.app
+display_url: https://aia-academy-website.netlify.app
 logo_url: /favicon.svg
 
 collections:
@@ -31,10 +37,10 @@ collections:
     folder: "src/content/newsletters"
     create: true
     slug: "{{year}}-{{month}}-{{slug}}"
-    summary: "{{title}} — {{date}}"
+    summary: "{{title}} · {{date}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Issue label (e.g. Issue 1 — June 2026)", name: "issue", widget: "string", required: false }
+      - { label: "Issue label (e.g. Issue 1, June 2026)", name: "issue", widget: "string", required: false }
       - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
       - { label: "Short summary (shown on cards)", name: "summary", widget: "text" }
       - { label: "Cover image", name: "coverImage", widget: "image", required: false }
@@ -49,7 +55,7 @@ collections:
     folder: "src/content/announcements"
     create: true
     slug: "{{year}}-{{month}}-{{slug}}"
-    summary: "{{title}} — {{date}}"
+    summary: "{{title}} · {{date}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
@@ -64,7 +70,7 @@ collections:
     folder: "src/content/questions"
     create: true
     slug: "{{year}}-{{month}}"
-    summary: "{{month}} — {{question}}"
+    summary: "{{month}}: {{question}}"
     fields:
       - { label: "Month (e.g. June 2026)", name: "month", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
@@ -74,6 +80,18 @@ collections:
         widget: "select"
         options: ["open", "closed"]
         default: "open"
+        hint: "While 'open', the answer and featured responses below stay hidden from the public. Set to 'closed' to reveal them."
+      - { label: "Answer to the question", name: "answer", widget: "text", required: false, hint: "Shown publicly only after you set the status above to 'closed'." }
+      - label: "Featured responses"
+        name: "featuredResponses"
+        widget: "list"
+        required: false
+        label_singular: "Response"
+        summary: "{{fields.name}}"
+        hint: "A few standout answers to showcase. Shown publicly once submissions are closed."
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Response", name: "response", widget: "text" }
       - { label: "Previous month's winner (name)", name: "previousWinner", widget: "string", required: false }
       - { label: "Previous winning answer", name: "previousAnswer", widget: "text", required: false }
       - { label: "Notes (optional)", name: "body", widget: "markdown", required: false }
@@ -100,7 +118,7 @@ collections:
     folder: "src/content/insights"
     create: true
     slug: "{{year}}-{{month}}-{{slug}}"
-    summary: "{{title}} — {{author}}"
+    summary: "{{title}} · {{author}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Author", name: "author", widget: "string" }

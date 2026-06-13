@@ -1,6 +1,6 @@
 ---
 question: "As a college student often traveling between campus and home, how should I shorten and combine my prayers?"
-answeredBy: "Sample answer — replace with a scholar's response"
+answeredBy: "Sample answer (replace with a scholar's response)"
 category: "Fiqh of Worship"
 date: 2026-06-03
 ---

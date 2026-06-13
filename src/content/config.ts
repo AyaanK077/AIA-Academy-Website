@@ -6,7 +6,7 @@ const newsletters = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    issue: z.string().optional(), // e.g. "Issue 1 — June 2026"
+    issue: z.string().optional(), // e.g. "Issue 1, June 2026"
     date: z.coerce.date(),
     summary: z.string(),
     coverImage: z.string().optional(),
@@ -26,7 +26,7 @@ const announcements = defineCollection({
   }),
 });
 
-// "Question of the Month" — current question + previous winner announcement.
+// "Question of the Month": current question + previous winner announcement.
 const questions = defineCollection({
   type: 'content',
   schema: z.object({
@@ -34,12 +34,18 @@ const questions = defineCollection({
     date: z.coerce.date(),
     question: z.string(),
     status: z.enum(['open', 'closed']).default('open'),
+    // The answer and featured responses are only revealed publicly once the
+    // status is set to 'closed' (see question-of-the-month.astro).
+    answer: z.string().optional(),
+    featuredResponses: z
+      .array(z.object({ name: z.string(), response: z.string() }))
+      .optional(),
     previousWinner: z.string().optional(),
     previousAnswer: z.string().optional(),
   }),
 });
 
-// Expert Q&A — questions answered by Muftis / scholars, published here.
+// Expert Q&A: questions answered by Muftis / scholars, published here.
 const qa = defineCollection({
   type: 'content',
   schema: z.object({
@@ -50,7 +56,7 @@ const qa = defineCollection({
   }),
 });
 
-// Alumni Insights — college experiences, achievements, advice (curated).
+// Alumni Insights: college experiences, achievements, advice (curated).
 const insights = defineCollection({
   type: 'content',
   schema: z.object({

@@ -19,7 +19,7 @@ const past = questions.slice(1);
   <PageHero
     eyebrow="Engage"
     title="Question of the Month"
-    subtitle="An interactive trivia or reflection question. Submit your answer — winners are announced in the following issue, in shaa Allah."
+    subtitle="An interactive trivia or reflection question. Submit your answer. Winners are announced in the following issue, in shaa Allah."
   />
 
   <section class="container-page py-16">
@@ -30,6 +30,28 @@ const past = questions.slice(1);
           {current.data.status === 'closed' && ' · Submissions closed'}
         </p>
         <h2 class="mt-3 font-display text-3xl text-white md:text-4xl">{current.data.question}</h2>
+
+        {current.data.status === 'closed' && current.data.answer && (
+          <div class="mt-6 rounded-xl bg-white/10 p-4">
+            <p class="text-sm font-semibold uppercase tracking-widest text-gold-300">Answer</p>
+            <p class="mt-1 text-cream-50">{current.data.answer}</p>
+          </div>
+        )}
+
+        {current.data.status === 'closed' && current.data.featuredResponses && current.data.featuredResponses.length > 0 && (
+          <div class="mt-6">
+            <p class="text-sm font-semibold uppercase tracking-widest text-gold-300">Featured responses</p>
+            <div class="mt-3 space-y-3">
+              {current.data.featuredResponses.map((r) => (
+                <div class="rounded-xl bg-white/10 p-4">
+                  <p class="text-cream-50">“{r.response}”</p>
+                  <p class="mt-2 text-sm font-medium text-gold-200">{r.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {current.data.previousWinner && (
           <p class="mt-6 rounded-xl bg-white/10 p-4">
             🏆 <strong>Last month's winner:</strong> {current.data.previousWinner}
@@ -43,7 +65,7 @@ const past = questions.slice(1);
         )}
       </div>
     ) : (
-      <p class="text-center text-ink/70">No question posted yet — check back soon, in shaa Allah.</p>
+      <p class="text-center text-ink/70">No question posted yet. Check back soon, in shaa Allah.</p>
     )}
   </section>
 
@@ -51,7 +73,7 @@ const past = questions.slice(1);
     <section id="submit" class="container-page pb-16">
       <SectionHeading eyebrow="Your Answer" title="Submit your response" align="center" />
       <div class="mx-auto mt-8 max-w-2xl">
-        <FormEmbed form="questionOfMonth" title="Question of the Month — Submit your answer" height={900} />
+        <FormEmbed form="questionOfMonth" title="Question of the Month: Submit your answer" height={900} />
       </div>
     </section>
   )}
@@ -65,6 +87,9 @@ const past = questions.slice(1);
             <div class="card">
               <p class="text-xs font-semibold uppercase tracking-widest text-gold-600">{q.data.month}</p>
               <p class="mt-1 text-lg text-emerald-800">{q.data.question}</p>
+              {q.data.answer && (
+                <p class="mt-2 text-sm text-ink/70"><strong>Answer:</strong> {q.data.answer}</p>
+              )}
               {q.data.previousWinner && (
                 <p class="mt-2 text-sm text-ink/70">🏆 Winner: {q.data.previousWinner}</p>
               )}
